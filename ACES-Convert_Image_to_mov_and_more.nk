@@ -1,0 +1,213 @@
+#! C:/Program Files/Nuke13.2v1/nuke-13.2.1.dll -nx
+version 13.2 v1
+define_window_layout_xml {<?xml version="1.0" encoding="UTF-8"?>
+<layout version="1.0">
+    <window x="0" y="0" w="1917" h="1128" screen="0">
+        <splitter orientation="1">
+            <split size="40"/>
+            <dock id="" hideTitles="1" activePageId="Toolbar.1">
+                <page id="Toolbar.1"/>
+            </dock>
+            <split size="1254" stretch="1"/>
+            <splitter orientation="2">
+                <split size="638"/>
+                <dock id="" activePageId="Viewer.1">
+                    <page id="Viewer.1"/>
+                </dock>
+                <split size="448"/>
+                <dock id="" activePageId="DAG.1" focus="true">
+                    <page id="DAG.1"/>
+                    <page id="Curve Editor.1"/>
+                    <page id="DopeSheet.1"/>
+                </dock>
+            </splitter>
+            <split size="615"/>
+            <dock id="" activePageId="Properties.1">
+                <page id="Properties.1"/>
+                <page id="uk.co.thefoundry.backgroundrenderview.1"/>
+            </dock>
+        </splitter>
+    </window>
+</layout>
+}
+Root {
+ inputs 0
+ name R:/00_pipeline/scripts/ACES-Convert_Image_to_mov_and_more.nk
+ frame 1001
+ first_frame 1001
+ last_frame 1085
+ lock_range true
+ format "2048 1556 0 0 2048 1556 1 2K_Super_35(full-ap)"
+ proxy_type scale
+ proxy_format "1024 778 0 0 1024 778 1 1K_Super_35(full-ap)"
+ colorManagement OCIO
+ defaultViewerLUT "OCIO LUTs"
+ workingSpaceLUT scene_linear
+ monitorLut "ACES/sRGB D60 sim."
+ monitorOutLUT "sRGB D60 sim. (ACES)"
+ int8Lut matte_paint
+ int16Lut texture_paint
+ logLut compositing_log
+ floatLut scene_linear
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode1
+ tile_color 0x388e8e00
+ label "Convert Single Image \n(ACES CG > sRGB)"
+ note_font_size 42
+ xpos -50
+ ypos -432
+ bdwidth 435
+ bdheight 410
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode2
+ tile_color 0x388e8e00
+ label "Convert Image Sequence\n(ACES CG > sRGB)"
+ note_font_size 42
+ xpos 450
+ ypos -441
+ bdwidth 435
+ bdheight 410
+}
+BackdropNode {
+ inputs 0
+ name BackdropNode3
+ tile_color 0x388e8e00
+ label "Convert sRGB Sequence"
+ note_font_size 42
+ xpos 1013
+ ypos -442
+ bdwidth 435
+ bdheight 410
+}
+Read {
+ inputs 0
+ file_type jpeg
+ file R:/05_shots/SH1030/04_fx/boat_wake_waterFX/flipbooks/base_flip_sim_v4/base_flipsim_v4.####.jpg
+ format "1280 853 0 0 1280 853 1 "
+ first 1001
+ last 1085
+ origfirst 1001
+ origlast 1085
+ origset true
+ colorspace "Utility - Linear - sRGB"
+ name Read3
+ xpos 1097
+ ypos -320
+}
+Write {
+ file R:/05_shots/SH1030/04_fx/boat_wake_waterFX/flipbooks/base_flip_sim_v4/base_flipsim_v4.mov
+ colorspace Gamma2.2
+ raw true
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec h264
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Best
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 50000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 1
+ first {{parent.Read3.origfirst}}
+ last {{parent.Read3.origlast}}
+ use_limit true
+ checkHashOnRead false
+ name Write3
+ xpos 1097
+ ypos -93
+}
+Viewer {
+ frame 1001
+ frame_range 1001-1085
+ colour_sample_bbox {-0.1083333343 0.07552083582 -0.1072916687 0.07656250149}
+ viewerProcess "sRGB D60 sim. (ACES)"
+ name Viewer1
+ xpos 260
+ ypos 72
+}
+Read {
+ inputs 0
+ file_type exr
+ file R:/03_assets/3001_satellite/07_shd/ipr/Active_Render.0001.2.exr
+ format "1920 817 0 0 1920 817 1 "
+ origset true
+ colorspace scene_linear
+ name Read2
+ xpos 523
+ ypos -312
+}
+OCIOColorSpace {
+ in_colorspace scene_linear
+ out_colorspace "Output - sRGB (D60 sim.)"
+ name OCIOColorSpace2
+ xpos 523
+ ypos -168
+}
+Write {
+ file R:/03_assets/3001_satellite/07_shd/ipr/Active_Render.0001.2.mov
+ colorspace Gamma2.2
+ raw true
+ file_type mov
+ mov64_format "mov (QuickTime / MOV)"
+ mov64_codec h264
+ mov_h264_codec_profile "High 4:2:0 8-bit"
+ mov64_pixel_format {{0}}
+ mov64_quality Best
+ mov64_fast_start true
+ mov64_write_timecode true
+ mov64_gop_size 12
+ mov64_b_frames 0
+ mov64_bitrate 50000
+ mov64_bitrate_tolerance 0
+ mov64_quality_min 1
+ mov64_quality_max 1
+ first {{parent.Read2.origfirst}}
+ last {{parent.Read2.origlast}}
+ use_limit true
+ checkHashOnRead false
+ name Write2
+ xpos 523
+ ypos -78
+}
+Read {
+ inputs 0
+ file_type exr
+ file R:/03_assets/3001_satellite/07_shd/ipr/Active_Render.0001.2.exr
+ format "1920 817 0 0 1920 817 1 "
+ origset true
+ colorspace scene_linear
+ name Read1
+ xpos 23
+ ypos -302
+}
+OCIOColorSpace {
+ in_colorspace scene_linear
+ out_colorspace "Output - sRGB (D60 sim.)"
+ name OCIOColorSpace1
+ xpos 23
+ ypos -159
+}
+Write {
+ file R:/03_assets/3001_satellite/07_shd/ipr/Active_Render.0001.2.jpg
+ raw true
+ file_type jpeg
+ _jpeg_quality 1
+ _jpeg_sub_sampling 4:2:2
+ create_directories true
+ first {{parent.Read1.origfirst}}
+ last {{parent.Read1.origlast}}
+ use_limit true
+ checkHashOnRead false
+ version 2
+ name Write1
+ xpos 23
+ ypos -69
+}
